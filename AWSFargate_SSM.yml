@@ -1,0 +1,26 @@
+description: Triggers AWS Lambda Fargate Function
+schemaVersion: '0.3'
+parameters:
+  Region:
+    description: (Required) Name of the Region
+    type: String
+    default: us-east-1
+  Cluster:
+    description: (Required) Name of the ECS cluster
+    type: String
+    default: FargateCluster2
+  Service:
+    description: (Required) Name of the ECS Service
+    type: String
+    default: sample-app-service
+  Tasks:
+    description: (Required) Number of tasks to stop
+    type: String
+mainSteps:
+  - inputs:
+      FunctionName: FargateTasks
+      Payload: '{"key1":"{{ Cluster }}","key2":"{{ Service }}","key3":"{{ Tasks }}","key4":"{{ Region }}"}'
+    name: InvokeLambda
+    action: 'aws:invokeLambdaFunction'
+    timeoutSeconds: 60
+    onFailure: Abort
